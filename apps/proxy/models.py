@@ -584,6 +584,7 @@ class SSConfig(models.Model, resetPortMixin):
             "enable": enable,
             "method": self.method,
             "protocol": ProxyNode.NODE_TYPE_SS,
+            "port": node.get_user_port(),
         }
 
 
