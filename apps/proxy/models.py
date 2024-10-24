@@ -173,12 +173,14 @@ class ProxyNode(BaseNodeModel, SequenceMixin):
     NODE_TYPE_SSR = "ssr"
     NODE_TYPE_VMESS = "vmess"
     NODE_TYPE_VLESS = "vless"
+    NODE_TYPE_STRONGSWAN = "strongswan"
     NODE_TYPE_SET = {
         NODE_TYPE_SS,
         NODE_TYPE_TROJAN,
         NODE_TYPE_SSR,
         NODE_TYPE_VMESS,
         NODE_TYPE_VLESS,
+        NODE_TYPE_STRONGSWAN,
     }
     NODE_CHOICES = (
         (NODE_TYPE_SS, NODE_TYPE_SS),
@@ -186,6 +188,7 @@ class ProxyNode(BaseNodeModel, SequenceMixin):
         (NODE_TYPE_SSR, NODE_TYPE_SSR),
         (NODE_TYPE_VMESS, NODE_TYPE_VMESS),
         (NODE_TYPE_VLESS, NODE_TYPE_VLESS),
+        (NODE_TYPE_STRONGSWAN, NODE_TYPE_STRONGSWAN),
     )
 
     EHCO_LOG_LEVELS = (
@@ -331,6 +334,8 @@ class ProxyNode(BaseNodeModel, SequenceMixin):
             proxy_cfg = self.ss_config
         elif self.node_type == self.NODE_TYPE_TROJAN:
             proxy_cfg = self.trojan_config
+        elif self.node_type == self.NODE_TYPE_STRONGSWAN:
+            proxy_cfg = self.strongswan_config
         else:
             raise Exception("not support node type")
 
@@ -603,8 +608,8 @@ class TrojanConfig(models.Model, resetPortMixin):
     )
 
     class Meta:
-        verbose_name = "SS配置"
-        verbose_name_plural = "SS配置"
+        verbose_name = "Trojan配置"
+        verbose_name_plural = "Trojan配置"
 
     def __str__(self) -> str:
         return f"{self.proxy_node.__str__()}-配置"
@@ -647,6 +652,42 @@ class TrojanConfig(models.Model, resetPortMixin):
             "protocol": ProxyNode.NODE_TYPE_TROJAN,
         }
 
+
+class StrongSwanConfig(models.Model):
+    proxy_node = models.OneToOneField(
+        to=ProxyNode,
+        related_name="strongswan_config",
+        on_delete=models.CASCADE,
+        primary_key=True,
+        help_text="代理节点",
+        verbose_name="代理节点",
+    )
+
+    class Meta:
+        verbose_name = "StrongSwan配置"
+        verbose_name_plural = "StrongSwan配置"
+
+    def __str__(self) -> str:
+        return f"{self.proxy_node.__str__()}-配置"
+
+    def to_node_config(self, node: ProxyNode):
+        return {}
+
+    def to_user_config(self, node: ProxyNode, user: User):
+        have_shared_traffic = user.total_traffic > (
+                user.download_traffic + user.upload_traffic
+        )
+        have_oc_traffic = False
+        if node.have_oc_users:
+            oc = UserProxyNodeOccupancy.get_by_proxy_node_and_user(node, user)
+            if oc:
+                have_oc_traffic = not oc.out_of_usage()
+        enable = node.enable and (have_shared_traffic or have_oc_traffic)
+        return {
+            "user_id": user.id,
+            "username": user.username,
+            "enable": enable,
+        }
 
 class RelayNode(BaseNodeModel):
     CMCC = "移动"
