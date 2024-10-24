@@ -25,6 +25,12 @@ class TrojanConfigInline(admin.StackedInline):
     fields = ["proxy_node", "multi_user_port", "fallback_addr"]
 
 
+class StrongSwanConfigInline(admin.StackedInline):
+    model = models.StrongSwanConfig
+    verbose_name = "StrongSwan配置"
+    fields = ["proxy_node"]
+
+
 class OccupancyConfigInline(admin.StackedInline):
     model = models.OccupancyConfig
     verbose_name = "占用配置"
@@ -68,6 +74,7 @@ class ProxyNodeAdmin(admin.ModelAdmin):
     all_inlines = [
         TrojanConfigInline,
         SSConfigInline,
+        StrongSwanConfigInline,
         OccupancyConfigInline,
     ]
     list_filter = ["provider_remark", "country"]
@@ -141,6 +148,8 @@ class ProxyNodeAdmin(admin.ModelAdmin):
             return [SSConfigInline] + self.inlines
         elif instance.node_type == models.ProxyNode.NODE_TYPE_TROJAN:
             return [TrojanConfigInline] + self.inlines
+        elif instance.node_type == models.ProxyNode.NODE_TYPE_STRONGSWAN:
+            return [StrongSwanConfigInline] + self.inlines
         return self.inlines
 
     @admin.display(description="等级/中转数量/在线")
