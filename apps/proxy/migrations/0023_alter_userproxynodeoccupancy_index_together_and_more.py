@@ -10,6 +10,18 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RemoveIndex(
+            model_name='userproxynodeoccupancy',
+            name='idx_out_of_traffic_user_end_time',
+        ),
+        migrations.RemoveIndex(
+            model_name='userproxynodeoccupancy',
+            name='idx_out_of_traffic_proxy_node_end_time',
+        ),
+        migrations.RemoveIndex(
+            model_name='userproxynodeoccupancy',
+            name='idx_out_of_traffic_end_time',
+        ),
         migrations.AddField(
             model_name="userproxynodeoccupancy",
             name="total_traffic",
