@@ -268,7 +268,7 @@ class ProxyNode(BaseNodeModel, SequenceMixin):
     def get_active_nodes(cls):
         query = cls.objects.filter(enable=True)
         return (
-            query.select_related("ss_config", "trojan_config")
+            query.select_related("ss_config", "trojan_config", "strongswan_config")
             .prefetch_related("relay_rules")
             .order_by("sequence")
         )
@@ -546,6 +546,7 @@ class SSConfig(models.Model, resetPortMixin):
     multi_user_port = models.IntegerField(
         "多用户端口", help_text="单端口多用户端口", null=True, blank=True
     )
+    remark = models.CharField("备注", max_length=64, blank=True, default="")
 
     class Meta:
         verbose_name = "SS配置"
@@ -606,6 +607,7 @@ class TrojanConfig(models.Model, resetPortMixin):
     multi_user_port = models.IntegerField(
         "多用户端口", help_text="单端口多用户端口", null=True, blank=True
     )
+    remark = models.CharField("备注", max_length=64, blank=True, default="")
 
     class Meta:
         verbose_name = "Trojan配置"
@@ -662,6 +664,7 @@ class StrongSwanConfig(models.Model):
         help_text="代理节点",
         verbose_name="代理节点",
     )
+    remark = models.CharField("备注", max_length=64, blank=True, default="")
 
     class Meta:
         verbose_name = "StrongSwan配置"
