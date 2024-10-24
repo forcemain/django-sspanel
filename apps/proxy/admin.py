@@ -16,19 +16,28 @@ class SSConfigInline(admin.StackedInline):
         "proxy_node",
         "method",
         "multi_user_port",
+        "remark",
     ]
 
 
 class TrojanConfigInline(admin.StackedInline):
     model = models.TrojanConfig
     verbose_name = "Trojan配置"
-    fields = ["proxy_node", "multi_user_port", "fallback_addr"]
+    fields = [
+        "proxy_node", 
+        "multi_user_port", 
+        "fallback_addr",
+        "remark",
+    ]
 
 
 class StrongSwanConfigInline(admin.StackedInline):
     model = models.StrongSwanConfig
     verbose_name = "StrongSwan配置"
-    fields = ["proxy_node"]
+    fields = [
+        "proxy_node",
+        "remark",
+    ]
 
 
 class OccupancyConfigInline(admin.StackedInline):
