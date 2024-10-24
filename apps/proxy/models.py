@@ -546,14 +546,10 @@ class SSConfig(models.Model, resetPortMixin):
     multi_user_port = models.IntegerField(
         "多用户端口", help_text="单端口多用户端口", null=True, blank=True
     )
-    remark = models.CharField("备注", max_length=64, blank=True, default="")
 
     class Meta:
         verbose_name = "SS配置"
         verbose_name_plural = "SS配置"
-
-    def __str__(self) -> str:
-        return f"{self.proxy_node.__str__()}-配置"
 
     def to_node_config(self, node: ProxyNode):
         xray_config = XRayTemplates.gen_base_config(
@@ -607,14 +603,10 @@ class TrojanConfig(models.Model, resetPortMixin):
     multi_user_port = models.IntegerField(
         "多用户端口", help_text="单端口多用户端口", null=True, blank=True
     )
-    remark = models.CharField("备注", max_length=64, blank=True, default="")
 
     class Meta:
         verbose_name = "Trojan配置"
         verbose_name_plural = "Trojan配置"
-
-    def __str__(self) -> str:
-        return f"{self.proxy_node.__str__()}-配置"
 
     def to_node_config(self, node: ProxyNode):
         xray_config = XRayTemplates.gen_base_config(
@@ -664,14 +656,10 @@ class StrongSwanConfig(models.Model):
         help_text="代理节点",
         verbose_name="代理节点",
     )
-    remark = models.CharField("备注", max_length=64, blank=True, default="")
 
     class Meta:
         verbose_name = "StrongSwan配置"
         verbose_name_plural = "StrongSwan配置"
-
-    def __str__(self) -> str:
-        return f"{self.proxy_node.__str__()}-配置"
 
     def to_node_config(self, node: ProxyNode):
         return {}
@@ -691,6 +679,7 @@ class StrongSwanConfig(models.Model):
             "username": user.username,
             "enable": enable,
         }
+
 
 class RelayNode(BaseNodeModel):
     CMCC = "移动"
@@ -979,9 +968,6 @@ class OccupancyConfig(BaseModel):
     class Meta:
         verbose_name = "占用配置"
         verbose_name_plural = "占用配置"
-
-    def __str__(self) -> str:
-        return f"占用配置:{self.id}"
 
     @classmethod
     def get_purchasable_proxy_nodes(cls, user: User):

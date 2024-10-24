@@ -2,8 +2,6 @@ from django import forms
 from django.contrib import admin, messages
 from django.db.models import F
 from django.utils.safestring import mark_safe
-from django.forms.models import BaseModelFormSet
-
 
 from apps import utils
 from apps.proxy import models
@@ -11,62 +9,80 @@ from apps.sspanel.models import User
 from apps.utils import traffic_format
 
 
-class ForceSaveFormSet(BaseModelFormSet):
-    def has_changed(self):
-        return True
+class InlineFormForceSaveMixin:
+    @property
+    def changed_data(self):
+        return [name for name, _ in self._bound_items()]
+
+
+class SSConfigInlineForm(forms.ModelForm):
+    class Meta:
+        model = models.SSConfig
+        fields = [
+            "proxy_node",
+            "method",
+            "multi_user_port",
+        ]
 
 
 class SSConfigInline(admin.StackedInline):
     model = models.SSConfig
     verbose_name = "SS配置"
-    formset = ForceSaveFormSet
+    form = SSConfigInlineForm
     extra = 0
-    fields = [
-        "proxy_node",
-        "method",
-        "multi_user_port",
-        "remark",
-    ]
+
+
+class TrojanConfigInlineForm(InlineFormForceSaveMixin, forms.ModelForm):
+    class Meta:
+        model = models.TrojanConfig
+        fields = [
+            "proxy_node",
+            "multi_user_port",
+            "fallback_addr",
+        ]
 
 
 class TrojanConfigInline(admin.StackedInline):
     model = models.TrojanConfig
     verbose_name = "Trojan配置"
-    formset = ForceSaveFormSet
+    form = TrojanConfigInlineForm
     extra = 0
-    fields = [
-        "proxy_node", 
-        "multi_user_port", 
-        "fallback_addr",
-        "remark",
-    ]
+
+
+class StrongSwanConfigInlineForm(InlineFormForceSaveMixin, forms.ModelForm):
+    class Meta:
+        model = models.StrongSwanConfig
+        fields = [
+            "proxy_node",
+        ]
 
 
 class StrongSwanConfigInline(admin.StackedInline):
     model = models.StrongSwanConfig
     verbose_name = "StrongSwan配置"
-    formset = ForceSaveFormSet
+    form = StrongSwanConfigInlineForm
     extra = 0
-    fields = [
-        "proxy_node",
-        "remark",
-    ]
+
+
+class OccupancyConfigInlineForm(InlineFormForceSaveMixin, forms.ModelForm):
+    class Meta:
+        model = models.OccupancyConfig
+        fields = [
+            "proxy_node",
+            "occupancy_price",
+            "occupancy_traffic",
+            "occupancy_user_limit",
+            "color",
+            "status",
+            "remark",
+        ]
 
 
 class OccupancyConfigInline(admin.StackedInline):
     model = models.OccupancyConfig
     verbose_name = "占用配置"
-    formset = ForceSaveFormSet
+    form = OccupancyConfigInlineForm
     extra = 0
-    fields = [
-        "proxy_node",
-        "occupancy_price",
-        "occupancy_traffic",
-        "occupancy_user_limit",
-        "color",
-        "status",
-        "remark",
-    ]
 
     def get_formset(self, request, obj=None, **kwargs):
         if obj:
