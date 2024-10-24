@@ -369,7 +369,9 @@ class Migration(migrations.Migration):
                 "verbose_name": "用户流量记录",
                 "verbose_name_plural": "用户流量记录",
                 "ordering": ["-created_at"],
-                "index_together": {("user", "proxy_node", "created_at")},
+                "indexes": [
+                    models.Index(fields=["user", "proxy_node", "created_at"], name="idx_user_proxy_node_created_at")
+                ]
             },
         ),
         migrations.CreateModel(
@@ -415,7 +417,11 @@ class Migration(migrations.Migration):
                 "verbose_name": "用户在线IP记录",
                 "verbose_name_plural": "用户在线IP记录",
                 "ordering": ["-created_at"],
-                "index_together": {("user", "proxy_node", "created_at")},
+                "indexes": [
+
+                    models.Index(fields=["user", "proxy_node", "created_at"], name="idx_user_proxy_node_created_at")
+
+                ]
             },
         ),
         migrations.CreateModel(
@@ -460,7 +466,11 @@ class Migration(migrations.Migration):
                 "verbose_name": "节点在线记录",
                 "verbose_name_plural": "节点在线记录",
                 "ordering": ["-created_at"],
-                "index_together": {("proxy_node", "created_at")},
+                "indexes": [
+
+                    models.Index(fields=["proxy_node", "created_at"], name="idx_proxy_node_created_at")
+
+                ]
             },
         ),
     ]

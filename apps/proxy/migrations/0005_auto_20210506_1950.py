@@ -12,10 +12,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterIndexTogether(
-            name="useronlineiplog",
-            index_together=None,
-        ),
         migrations.RemoveField(
             model_name="useronlineiplog",
             name="proxy_node",

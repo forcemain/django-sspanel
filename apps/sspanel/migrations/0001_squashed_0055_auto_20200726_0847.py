@@ -711,7 +711,9 @@ class Migration(migrations.Migration):
             ],
             options={
                 "verbose_name_plural": "用户订单",
-                "index_together": {("user", "status")},
+                "indexes": [
+                    models.Index(fields=["user", "status"], name="idx_user_status")
+                ]
             },
         ),
         migrations.CreateModel(
@@ -735,7 +737,11 @@ class Migration(migrations.Migration):
                 "verbose_name_plural": "用户在线IP",
                 "ordering": ["-created_at"],
                 "unique_together": set(),
-                "index_together": {("node_id", "created_at")},
+                "indexes": [
+
+                    models.Index(fields=["node_id", "created_at"], name="idx_node_id_created_at")
+
+                ]
             },
         ),
         migrations.CreateModel(
@@ -774,7 +780,11 @@ class Migration(migrations.Migration):
             options={
                 "verbose_name_plural": "流量记录",
                 "ordering": ["-date"],
-                "index_together": {("user_id", "node_type", "node_id", "date")},
+                "indexes": [
+
+                    models.Index(fields=["user_id", "node_type", "node_id", "date"], name="idx_user_id_node_type_node_id_date")
+
+                ]
             },
         ),
         migrations.CreateModel(
@@ -889,7 +899,11 @@ class Migration(migrations.Migration):
             options={
                 "verbose_name_plural": "节点在线记录",
                 "ordering": ["-created_at"],
-                "index_together": {("node_type", "node_id", "created_at")},
+                "indexes": [
+
+                    models.Index(fields=["node_type", "node_id", "created_at"], name="idx_node_type_node_id_created_at")
+
+                ]
             },
         ),
         migrations.CreateModel(

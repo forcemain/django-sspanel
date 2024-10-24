@@ -117,11 +117,11 @@ class Migration(migrations.Migration):
             options={
                 "verbose_name": "占用记录",
                 "verbose_name_plural": "占用记录",
-                "index_together": {
-                    ("out_of_traffic", "user", "end_time"),
-                    ("out_of_traffic", "proxy_node", "end_time"),
-                    ("out_of_traffic", "end_time"),
-                },
+                "indexes": [
+                    models.Index(fields=["out_of_traffic", "user", "end_time"], name="idx_out_of_traffic_user_end_time"),
+                    models.Index(fields=["out_of_traffic", "proxy_node", "end_time"], name="idx_out_of_traffic_proxy_node_end_time"),
+                    models.Index(fields=["out_of_traffic", "end_time"], name="idx_out_of_traffic_end_time")
+                ]
             },
         ),
     ]

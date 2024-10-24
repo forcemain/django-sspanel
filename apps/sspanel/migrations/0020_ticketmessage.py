@@ -50,7 +50,9 @@ class Migration(migrations.Migration):
                 "verbose_name": "工单回复",
                 "verbose_name_plural": "工单回复",
                 "ordering": ("ticket", "-created_at"),
-                "index_together": {("ticket", "created_at")},
+                "indexes": [
+                    models.Index(fields=["ticket", "created_at"], name="idx_ticket_created_at")
+                ]
             },
         ),
     ]

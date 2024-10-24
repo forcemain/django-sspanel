@@ -10,10 +10,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterIndexTogether(
-            name="userproxynodeoccupancy",
-            index_together=set(),
-        ),
         migrations.AddField(
             model_name="userproxynodeoccupancy",
             name="total_traffic",

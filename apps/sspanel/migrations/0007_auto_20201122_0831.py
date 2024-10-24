@@ -153,7 +153,9 @@ class Migration(migrations.Migration):
                 "verbose_name": "用户订阅记录",
                 "verbose_name_plural": "用户订阅记录",
                 "ordering": ["-created_at"],
-                "index_together": {("user", "created_at")},
+                "indexes": [
+                    models.Index(fields=["user", "created_at"], name="idx_user_created_at")
+                ]
             },
         ),
     ]
