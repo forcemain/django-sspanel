@@ -2,6 +2,8 @@ from django import forms
 from django.contrib import admin, messages
 from django.db.models import F
 from django.utils.safestring import mark_safe
+from django.forms.models import BaseModelFormSet
+
 
 from apps import utils
 from apps.proxy import models
@@ -9,9 +11,16 @@ from apps.sspanel.models import User
 from apps.utils import traffic_format
 
 
+class ForceSaveFormSet(BaseModelFormSet):
+    def has_changed(self):
+        return True
+
+
 class SSConfigInline(admin.StackedInline):
     model = models.SSConfig
     verbose_name = "SS配置"
+    formset = ForceSaveFormSet
+    extra = 0
     fields = [
         "proxy_node",
         "method",
@@ -23,6 +32,8 @@ class SSConfigInline(admin.StackedInline):
 class TrojanConfigInline(admin.StackedInline):
     model = models.TrojanConfig
     verbose_name = "Trojan配置"
+    formset = ForceSaveFormSet
+    extra = 0
     fields = [
         "proxy_node", 
         "multi_user_port", 
@@ -34,6 +45,8 @@ class TrojanConfigInline(admin.StackedInline):
 class StrongSwanConfigInline(admin.StackedInline):
     model = models.StrongSwanConfig
     verbose_name = "StrongSwan配置"
+    formset = ForceSaveFormSet
+    extra = 0
     fields = [
         "proxy_node",
         "remark",
@@ -43,6 +56,8 @@ class StrongSwanConfigInline(admin.StackedInline):
 class OccupancyConfigInline(admin.StackedInline):
     model = models.OccupancyConfig
     verbose_name = "占用配置"
+    formset = ForceSaveFormSet
+    extra = 0
     fields = [
         "proxy_node",
         "occupancy_price",
